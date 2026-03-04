@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import pg from "pg";
+import 'dotenv/config'
 
 console.log(process.env.DATABASE_URL)
 
