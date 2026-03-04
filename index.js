@@ -2,6 +2,8 @@ import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import pg from "pg";
 
+console.log(process.env.DATABASE_URL)
+
 dotenv.config();
 const { Pool } = pg;
 
