@@ -134,9 +134,9 @@ const commands = [
 ];
 
 
-const DISPLAY_NAME_OVERRIDE = {
-  "kuri5849": "Disboard",
-  ".8luna8": "ディス速",
+const INVITE_CODE_LABEL = {
+  "Zgvpv5j23u": "Disboard",
+  "JJw3P9JnDh": "ディス速",
 };
 
 
@@ -394,8 +394,7 @@ client.on("messageCreate", async (message) => {
           try { member = await message.guild.members.fetch(row.inviterid); } catch (_) {}
         }
         const code      = row.invitecode ?? "不明";
-        const _username1 = member?.user.username ?? row.invitername;
-        const inviter   = DISPLAY_NAME_OVERRIDE[_username1] ?? member?.user.username ?? member?.displayName ?? row.invitername ?? "不明";
+        const inviter   = INVITE_CODE_LABEL[code] ?? member?.displayName ?? row.invitername ?? "不明";
         const inviterId = row.inviterid ?? "不明";
         text += `${rank++}. **${inviter}** (\`${inviterId}\`)　\`${code}\`　→ **${row.count}人**\n`;
       }
@@ -438,8 +437,7 @@ client.on("messageCreate", async (message) => {
           try { member = await message.guild.members.fetch(row.inviterid); } catch (_) {}
         }
         const code      = row.invitecode;
-        const _username2 = member?.user.username ?? row.invitername;
-        const inviter   = DISPLAY_NAME_OVERRIDE[_username2] ?? member?.user.username ?? member?.displayName ?? row.invitername ?? "退鯖済み";
+        const inviter   = INVITE_CODE_LABEL[code] ?? member?.displayName ?? row.invitername ?? "退鯖済み";
         const inviterId = row.inviterid ?? "不明";
         const retained  = Number(row.retained) || 0;
         const total     = Number(row.total)    || 0;
@@ -505,7 +503,7 @@ client.on("messageCreate", async (message) => {
       `);
       await writeSheet(sheets, "招待別流入数",
         ["招待コード", "招待者", "流入人数"],
-        rinvite.rows.map(r => [r.invitecode ?? "不明", r.invitername ?? "不明", r.count])
+        rinvite.rows.map(r => [r.invitecode ?? "不明", INVITE_CODE_LABEL[r.invitecode] ?? r.invitername ?? "不明", r.count])
       );
 
       const rinviteRet = await db.query(`
@@ -528,7 +526,7 @@ client.on("messageCreate", async (message) => {
           const ret = Number(r.retained) || 0;
           const tot = Number(r.total)    || 0;
           const rt  = tot === 0 ? "0.0" : ((ret / tot) * 100).toFixed(1);
-          return [r.invitecode ?? "不明", r.invitername ?? "不明", tot, ret, rt];
+          return [r.invitecode ?? "不明", INVITE_CODE_LABEL[r.invitecode] ?? r.invitername ?? "不明", tot, ret, rt];
         })
       );
 
