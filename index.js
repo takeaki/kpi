@@ -296,10 +296,10 @@ client.on("messageCreate", async (message) => {
   if (message.content === "!7day") {
     try {
       const result = await db.query(`
-        SELECT userId, username, COUNT(*) AS count
+        SELECT userId, MAX(username) AS username, COUNT(*) AS count
         FROM message_logs
         WHERE timestamp >= NOW() - INTERVAL '7 days'
-        GROUP BY userId, username
+        GROUP BY userId
         ORDER BY count DESC
         LIMIT 10
       `);
@@ -458,10 +458,10 @@ client.on("messageCreate", async (message) => {
       const sheets = await getSheetsClient();
 
       const r7day = await db.query(`
-        SELECT username, COUNT(*) AS count
+        SELECT MAX(username) AS username, COUNT(*) AS count
         FROM message_logs
         WHERE timestamp >= NOW() - INTERVAL '7 days'
-        GROUP BY userId, username ORDER BY count DESC LIMIT 10
+        GROUP BY userId ORDER BY count DESC LIMIT 10
       `);
       await writeSheet(sheets, "直近7日発言ランキング",
         ["順位", "ユーザー名", "発言数"],
@@ -546,11 +546,11 @@ client.on("messageCreate", async (message) => {
 
       const result = await db.query(
         isMonthly
-          ? `SELECT userId, username, COUNT(*) AS count FROM message_logs
+          ? `SELECT userId, MAX(username) AS username, COUNT(*) AS count FROM message_logs
              WHERE timestamp >= date_trunc('month', NOW())
-             GROUP BY userId, username ORDER BY count DESC LIMIT 20`
-          : `SELECT userId, username, COUNT(*) AS count FROM message_logs
-             GROUP BY userId, username ORDER BY count DESC LIMIT 20`
+             GROUP BY userId ORDER BY count DESC LIMIT 20`
+          : `SELECT userId, MAX(username) AS username, COUNT(*) AS count FROM message_logs
+             GROUP BY userId ORDER BY count DESC LIMIT 20`
       );
 
       let rows = result.rows.filter(row => !bannedIds.has(row.userid));
