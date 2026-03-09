@@ -3,3 +3,5 @@ node_modules/
 kpi.db
 *.db
 .ssh/
+.vscode/
+node_modules/
