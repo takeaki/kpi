@@ -425,13 +425,12 @@ client.on("messageCreate", async (message) => {
         WHERE inviteCode IS NOT NULL
         GROUP BY inviteCode, inviterId, inviterName
         ORDER BY total DESC
+        LIMIT 10
       `);
       if (result.rows.length === 0) return message.reply("💜 招待データがありません。");
 
       let text = "💜 **招待コード別 7日定着率レポート**\n\n";
-      let displayed = 0;
       for (const row of result.rows) {
-        if (displayed >= 10) break;
         let member = row.inviterid ? message.guild.members.cache.get(row.inviterid) : null;
         if (!member && row.inviterid) {
           try { member = await message.guild.members.fetch(row.inviterid); } catch (_) {}
@@ -444,7 +443,6 @@ client.on("messageCreate", async (message) => {
         const rate      = total === 0 ? "0.0" : ((retained / total) * 100).toFixed(1);
         const emoji     = rate >= 70 ? "🟢" : rate >= 40 ? "🟡" : "🔴";
         text += `${emoji} \`${code}\`　招待者: **${inviter}** (\`${inviterId}\`)\n　流入: ${total}人　定着: ${retained}人　定着率: **${rate}%**\n\n`;
-        displayed++;
       }
       return message.reply(text);
     } catch (err) {
