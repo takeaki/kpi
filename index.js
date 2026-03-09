@@ -130,7 +130,7 @@ const client = new Client({
 
 const PIENDOMO_ROLE_ID = "1462591303778046158";
 const commands = [
-  { name: "piendomo", description: "ぴえんどもロールを付与/解除します" }
+  { name: "piendomo", description: "ぴえんどもロールを付与/解除しますぴえん" }
 ];
 
 
